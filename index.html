@@ -13,100 +13,165 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>ARC: Ariadne Components by Ariadne-CMS</title>
+    <title>ARC: Ariadne Components by poef</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
         <h1>ARC: Ariadne Components</h1>
-        <h2>A flexible component library for PHP 5.3+</h2>
-        <a href="https://github.com/Ariadne-CMS/arc" class="button"><small>View project on</small>GitHub</a>
+        <h2>A flexible component library for PHP 5.4+</h2>
+        <a href="https://github.com/poef/arc" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
 
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <h3>ARC: Ariadne Components.</h3>
+          <h2>
+<a name="arc-ariadne-components" class="anchor" href="#arc-ariadne-components"><span class="octicon octicon-link"></span></a>ARC: Ariadne Components</h2>
 
-<p>The Ariadne Component Library is a spinoff from the Ariadne Web Application Framework and Content Management System [ <a href="http://www.ariadne-cms.org/">http://www.ariadne-cms.org/</a> ]</p>
+<p>The Ariadne Component Library is a spinoff from the Ariadne Web 
+Application Framework and Content Management System 
+[ <a href="http://www.ariadne-cms.org/">http://www.ariadne-cms.org/</a> ]</p>
 
-<p><em>Note: ARC is very much a work in progress. It is by no means complete yet. Check the tests directory to see which parts are tested. The XML component still doesn't pass all tests, so beware :)</em></p>
+<p>ARC is a set of separate PHP components. Each component is designed to
+be usable as a standalone component except for a very small set of core
+abstractions used by multiple components. </p>
 
-<p>It is designed to make it simpler to do many common web application tasks in a way that is easy to extend and is standards compliant and accessible by default. The components are loosely coupled, they can generally be used seperately but can be combined to enable more features.</p>
+<h3>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h3>
 
-<p>It doesn't provide a MVC (Model View Controller) framework or URL router, that is left to other frameworks.</p>
+<p>Event handling, with capture and listen phase, seperate preventDefault 
+and event cancelling, path aware events and handlers:</p>
 
-<h2>Examples</h2>
-
-<p>Event handling, with capture and listen phase, seperate preventDefault and event cancelling, path aware events and handlers:</p>
-
-<pre><code>$listener = \arc\events::cd('/sub/path/')-&gt;listen( 'myEvent' )
-    -&gt;call( function( $event ) {
-         // do something
-    } );
-</code></pre>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="nv">$listener</span> <span class="o">=</span> <span class="nx">\arc\events</span><span class="o">::</span><span class="na">cd</span><span class="p">(</span><span class="s1">'/sub/path/'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">listen</span><span class="p">(</span> <span class="s1">'myEvent'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span> <span class="nv">$event</span> <span class="p">)</span> <span class="p">{</span>
+         <span class="c1">// do something</span>
+    <span class="p">}</span> <span class="p">);</span>
+</pre></div>
 
 <p>Firing events:</p>
 
-<pre><code>$result = \arc\events::cd('/sub/path/child/')
-    -&gt;fire( 'myEvent', array( 'extra' =&gt; 'data' ) );
-if ( $result ) {
-     // do default action
-}
-</code></pre>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nx">\arc\events</span><span class="o">::</span><span class="na">cd</span><span class="p">(</span><span class="s1">'/sub/path/child/'</span><span class="p">)</span>
+    <span class="o">-&gt;</span><span class="na">fire</span><span class="p">(</span> <span class="s1">'myEvent'</span><span class="p">,</span> <span class="p">[</span> <span class="s1">'extra'</span> <span class="o">=&gt;</span> <span class="s1">'data'</span> <span class="p">]</span> <span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="nv">$result</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// do default action</span>
+    <span class="p">}</span>
+</pre></div>
 
 <p>Caching:</p>
 
-<pre><code>$result = \arc\cache::cache('cacheName', function() {
-    // do something that takes time
-    return $value;
-});
-</code></pre>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="nv">$result</span> <span class="o">=</span> <span class="nx">\arc\cache</span><span class="o">::</span><span class="na">cache</span><span class="p">(</span><span class="s1">'cachedName'</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// do something that takes time</span>
+        <span class="k">return</span> <span class="nv">$value</span><span class="p">;</span>
+    <span class="p">});</span>
+</pre></div>
 
 <p>Generic caching proxy:</p>
 
-<pre><code>$cachingHttpClient = \arc\cache::proxy( \arc\http::client(), '1 hour' );
-</code></pre>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
+    <span class="nv">$cachingHttpClient</span> <span class="o">=</span> <span class="nx">\arc\cache</span><span class="o">::</span><span class="na">proxy</span><span class="p">(</span> <span class="nx">\arc\http</span><span class="o">::</span><span class="na">client</span><span class="p">(),</span> <span class="s1">'1 hour'</span> <span class="p">);</span>
+</pre></div>
 
-<p>XML parsing and generation:</p>
+<h2>
+<a name="what-makes-arc-usefulinterestingunique" class="anchor" href="#what-makes-arc-usefulinterestingunique"><span class="octicon octicon-link"></span></a>What makes ARC useful/interesting/unique?</h2>
 
-<pre><code>$rss = \arc\xml::parse( $someRSS );
-$titles = $rss-&gt;rss-&gt;item-&gt;title-&gt;nodeValue;
-</code></pre>
+<p>ARC is designed to make full use of all the modern features of PHP that
+make it easy to use and adapt. The code has been written to be read and
+adapted. All components use dependency injection and composition instead
+of inheritance wherever possible. </p>
 
-<p>or simpler:</p>
+<p>ARC does this while still keeping close to the spirit of PHP. This means 
+that all components accept basic PHP data types as input wherever possible</p>
 
-<pre><code>$titles = $rss-&gt;find('item title')-&gt;nodeValue;
-</code></pre>
+<ul>
+<li>strings and arrays mostly. Where this isn't possible easy conversion 
+methods are available to convert simple types to complex and vice-versa.
+Objects have __toString() methods if applicable or extend ArrayObject if
+they are array-like.</li>
+</ul><p>The use of basic types has an advantage that is easily overlooked: strings
+and arrays are passed by value to functions, so there is no chance of
+your data being changed inside a function without you knowing it. The
+objects used in ARC - which are always passed by reference in PHP - tend
+to be immutable to avoid this same problem. Immutable means that any change
+in the state of an object results in a new object instead of a changed 
+object.</p>
 
-<p>generation:</p>
+<p>The exceptions are those objects which are meant to be mutable as they are
+datastorage structures, e.g. the tree.</p>
 
-<pre><code>$rss-&gt;rss-&gt;items[] = \arc\xml::el('item');
-echo $rss; // full rss xml output, including xml preamble
-</code></pre>
+<p>ARC can be divided into a few separate parts which can be used independant
+of eachother. The only requirement is the core:</p>
+
+<p>arc\arc
+arc\exceptions
+arc\path
+arc\tree
+arc\lambda
+arc\context</p>
+
+<p>Each ARC component is made up of a base static factory class - e.g.
+arc\cache.php - and a subdirectory with non-static classes - arc\cache.</p>
+
+<p>The base factory class is intended as a simple static API to use the
+classes in the subdirectories. In cases where a static factory is not
+optimal, you can create your own instantation scheme.</p>
+
+<p>There is no dependency in the subdirectories on the static classes, it is
+strictly one-way. The events component for example defines an EventTree
+class which requires a node which has the properties in the
+\arc\tree\Node.php abstract class. The factory method getEventsTree() in 
+\arc\events.php instantiates a default \arc\tree for the EventsTree to use.
+The EventsTree class itself has no knowledge about anything outside its own
+component directory.</p>
+
+<p>In addition ARC uses ducktyping exclusively. There are sometimes interfaces
+and abstract classes defined, but there is never a check on the class of an
+object - other than the generic PHP interfaces - like \Traversable. Type hints
+give the illusion of safety but they generate runtime errors only and or
+therefor of limited use. By skipping type hints, ARC components can be much
+more flexible and concise. This results in less code which directly means less
+bugs.</p>
+
+<p>ARC components are designed to be small. Code size and bugs are directly related,
+so by creating smaller components we hope to increase the quality. We also hope
+that succinctness will increase readability and therefor discoverability of bugs.
+The flipside is that the components sometimes may not have a feature you need. The
+idea here is to either add it using composition or skip the component and use
+a more complex one instead.</p>
+
+<p>There are a number of well maintained HTTP client libraries for example. ARC adds
+its own, but it is a very simple one based on PHP's stream support. This may not
+suffice in some circumstances and you might need Guzzle or Buzz. But the idea is
+that in those cases where you don't need the extra power, you will not need to
+add the extra complexity of those libraries. If later you do need them, it is very
+simple to create a facade using \arc\lambda\Prototype that uses Guzzle or Buzz but
+has the same or similar API as \arc\http\StreamClient.</p>
 
 <p>There's a lot more, take a look at the <a href="https://github.com/Ariadne-CMS/arc/wiki">wiki pages for the full API</a>. </p>
 
-<p>A key difference between ARC and most other libraries or components doing similar stuff is that many of the ARC components understand filesystem like hierarchies. The events component for example allows you to fire or listen to an event at a certain path. That is what the <code>cd()</code> method is doing there. Any event fired on such a path first checks listeners in the capture phase from the root ( '/' ) up to the path the event was actually fired on. Then it bubbles back up to the root in the listen phase. In effect we use a path based hierarchy like your browser uses the DOM hierarchy.</p>
-
-<p>You don't have to use these paths, but most of the components support it. Ariadne is a CMS built based on a structured object store with a filesystem like content hierarchy. All these components are designed to work well with that concept.</p>
+<p>Auke van Slooten
+<a href="mailto:auke@muze.nl">auke@muze.nl</a>
+2013</p>
         </section>
 
         <aside id="sidebar">
-          <a href="https://github.com/Ariadne-CMS/arc/zipball/master" class="button">
+          <a href="https://github.com/poef/arc/zipball/master" class="button">
             <small>Download</small>
             .zip file
           </a>
-          <a href="https://github.com/Ariadne-CMS/arc/tarball/master" class="button">
+          <a href="https://github.com/poef/arc/tarball/master" class="button">
             <small>Download</small>
             .tar.gz file
           </a>
 
-          <p class="repo-owner"><a href="https://github.com/Ariadne-CMS/arc"></a> is maintained by <a href="https://github.com/Ariadne-CMS">Ariadne-CMS</a>.</p>
+          <p class="repo-owner"><a href="https://github.com/poef/arc"></a> is maintained by <a href="https://github.com/poef">poef</a>.</p>
 
-          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
     </div>
